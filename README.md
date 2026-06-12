@@ -21,7 +21,7 @@ Fetches periodic snapshots from any Frigate camera on a remote host via SSH, org
 
 | Argument | Required | Default | Description |
 |---|---|---|---|
-| `frigateUrl` | yes | — | Frigate API base URL, e.g. `http://192.168.1.10:5000` |
+| `frigateUrl` | yes | — | Frigate API base URL, e.g. `http://192.0.2.10:5000` |
 | `sshHost` | yes | — | SSH hostname or IP of the machine running the Frigate container |
 | `camera` | yes | — | Frigate camera name, e.g. `driveway` |
 | `hostArchiveDir` | yes | — | Absolute path to the timelapse archive directory on the SSH host, e.g. `/srv/frigate/timelapse-archive` |
@@ -73,8 +73,8 @@ swamp extension pull @mgreten/frigate-timelapse
 
 # Create a model instance
 swamp model create @mgreten/frigate-timelapse my-timelapse \
-  --global-arg frigateUrl=http://192.168.1.10:5000 \
-  --global-arg sshHost=192.168.1.10 \
+  --global-arg frigateUrl=http://192.0.2.10:5000 \
+  --global-arg sshHost=192.0.2.10 \
   --global-arg camera=driveway \
   --global-arg hostArchiveDir=/srv/frigate/timelapse-archive \
   --global-arg containerArchiveDir=/media/frigate/timelapse-archive
