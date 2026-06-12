@@ -21,10 +21,14 @@ const GlobalArgsSchema = z.object({
     .describe("Frigate API base URL (e.g. 'http://192.168.1.10:5000')"),
   sshHost: z
     .string()
-    .describe("SSH hostname or IP of the machine running the Frigate container"),
+    .describe(
+      "SSH hostname or IP of the machine running the Frigate container",
+    ),
   camera: z
     .string()
-    .describe("Frigate camera name to capture snapshots from (e.g. 'driveway')"),
+    .describe(
+      "Frigate camera name to capture snapshots from (e.g. 'driveway')",
+    ),
   containerName: z
     .string()
     .default("frigate")
@@ -33,21 +37,21 @@ const GlobalArgsSchema = z.object({
     .string()
     .describe(
       "Absolute path to the timelapse archive directory on the SSH host " +
-      "(e.g. '/srv/frigate/timelapse-archive')",
+        "(e.g. '/srv/frigate/timelapse-archive')",
     ),
   containerArchiveDir: z
     .string()
     .describe(
       "Absolute path to the same archive directory as seen from inside the " +
-      "Frigate container (e.g. '/media/frigate/timelapse-archive'). " +
-      "Needed because ffmpeg runs via 'docker exec' and sees container paths.",
+        "Frigate container (e.g. '/media/frigate/timelapse-archive'). " +
+        "Needed because ffmpeg runs via 'docker exec' and sees container paths.",
     ),
   ffmpegPath: z
     .string()
     .default("/usr/lib/ffmpeg/7.0/bin/ffmpeg")
     .describe(
       "Path to ffmpeg inside the Frigate container. " +
-      "Run 'docker exec <container> find /usr -name ffmpeg' to locate it.",
+        "Run 'docker exec <container> find /usr -name ffmpeg' to locate it.",
     ),
 });
 
@@ -57,7 +61,9 @@ const GlobalArgsSchema = z.object({
 
 const SnapshotSchema = z.object({
   phase: z.string().describe("Phase name this snapshot belongs to"),
-  file: z.string().describe("Absolute path to the snapshot JPEG on the SSH host"),
+  file: z.string().describe(
+    "Absolute path to the snapshot JPEG on the SSH host",
+  ),
   camera: z.string().describe("Camera name"),
   timestamp: z.string().describe("ISO-8601 capture timestamp"),
   size: z.number().describe("File size in bytes"),
@@ -82,7 +88,9 @@ const CompiledVideoSchema = z.object({
   phase: z.string(),
   date: z.string().describe("YYYY-MM-DD date string for the compiled day"),
   camera: z.string(),
-  file: z.string().describe("Absolute path to the compiled video on the SSH host"),
+  file: z.string().describe(
+    "Absolute path to the compiled video on the SSH host",
+  ),
   frameCount: z.number().describe("Number of frames compiled into the video"),
   durationSec: z.number().describe("Approximate video duration in seconds"),
   timestamp: z.string().describe("ISO-8601 timestamp of compilation"),
@@ -111,7 +119,9 @@ const PhaseStatusSchema = z.object({
   phase: z.string(),
   camera: z.string(),
   status: z.string(),
-  phasesFile: z.string().describe("Absolute path to phases.json on the SSH host"),
+  phasesFile: z.string().describe(
+    "Absolute path to phases.json on the SSH host",
+  ),
   timestamp: z.string(),
 });
 
@@ -234,7 +244,8 @@ export const model = {
         args: { phase: string },
         context: MethodContext,
       ): Promise<{ dataHandles: unknown[] }> => {
-        const { sshHost, frigateUrl, camera, hostArchiveDir } = context.globalArgs;
+        const { sshHost, frigateUrl, camera, hostArchiveDir } =
+          context.globalArgs;
         const { phase } = args;
 
         // Build the snapshot directory path on the remote host
@@ -419,8 +430,14 @@ export const model = {
         args: { date: string; phase: string; fps: number; crf: number },
         context: MethodContext,
       ): Promise<{ dataHandles: unknown[] }> => {
-        const { sshHost, camera, hostArchiveDir, containerArchiveDir, containerName, ffmpegPath } =
-          context.globalArgs;
+        const {
+          sshHost,
+          camera,
+          hostArchiveDir,
+          containerArchiveDir,
+          containerName,
+          ffmpegPath,
+        } = context.globalArgs;
         const { date, phase, fps, crf } = args;
 
         // Normalise date to YYYYMMDD for glob matching
@@ -459,8 +476,10 @@ export const model = {
 
         // ffmpeg runs inside the Frigate container via docker exec,
         // so we use containerArchiveDir for all paths passed to ffmpeg.
-        const containerSnapshotDir = `${containerArchiveDir}/${camera}/snapshots/${phase}`;
-        const containerOutputFile = `${containerArchiveDir}/${camera}/videos/${phase}/${dateCompact}.mp4`;
+        const containerSnapshotDir =
+          `${containerArchiveDir}/${camera}/snapshots/${phase}`;
+        const containerOutputFile =
+          `${containerArchiveDir}/${camera}/videos/${phase}/${dateCompact}.mp4`;
 
         const ffmpegCmd = `docker exec ${containerName} ${ffmpegPath} -y ` +
           `-framerate ${fps} ` +
@@ -544,8 +563,14 @@ export const model = {
         },
         context: MethodContext,
       ): Promise<{ dataHandles: unknown[] }> => {
-        const { sshHost, camera, hostArchiveDir, containerArchiveDir, containerName, ffmpegPath } =
-          context.globalArgs;
+        const {
+          sshHost,
+          camera,
+          hostArchiveDir,
+          containerArchiveDir,
+          containerName,
+          ffmpegPath,
+        } = context.globalArgs;
         const { phase, startDate, endDate, fps, crf } = args;
 
         const snapshotDir = `${hostArchiveDir}/${camera}/snapshots/${phase}`;
@@ -597,8 +622,10 @@ export const model = {
 
         // ffmpeg runs inside the Frigate container via docker exec,
         // so we use containerArchiveDir for all paths passed to ffmpeg.
-        const containerSnapshotDir = `${containerArchiveDir}/${camera}/snapshots/${phase}`;
-        const containerVideoDir = `${containerArchiveDir}/${camera}/videos/${phase}`;
+        const containerSnapshotDir =
+          `${containerArchiveDir}/${camera}/snapshots/${phase}`;
+        const containerVideoDir =
+          `${containerArchiveDir}/${camera}/videos/${phase}`;
 
         // Compile each day individually
         for (const dateCompact of allDates) {
@@ -842,7 +869,8 @@ export const model = {
         // Enrich each phase with a live snapshot count
         const enriched: z.infer<typeof PhaseEntrySchema>[] = [];
         for (const entry of phases) {
-          const snapshotDir = `${hostArchiveDir}/${camera}/snapshots/${entry.name}`;
+          const snapshotDir =
+            `${hostArchiveDir}/${camera}/snapshots/${entry.name}`;
           let snapshotCount = 0;
           try {
             const countStr = await sshExec(
