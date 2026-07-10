@@ -180,7 +180,7 @@ type MethodContext = {
  */
 export const model = {
   type: "@mgreten/frigate-timelapse",
-  version: "2026.06.27.1",
+  version: "2026.07.10.1",
   globalArguments: GlobalArgsSchema,
   resources: {
     snapshot: {
