@@ -18,7 +18,7 @@ import { z } from "npm:zod@4";
 const GlobalArgsSchema = z.object({
   frigateUrl: z
     .string()
-    .describe("Frigate API base URL (e.g. 'http://192.168.1.10:5000')"),
+    .describe("Frigate API base URL (e.g. 'http://192.0.2.10:5000')"),
   sshHost: z
     .string()
     .describe(
@@ -180,7 +180,7 @@ type MethodContext = {
  */
 export const model = {
   type: "@mgreten/frigate-timelapse",
-  version: "2026.06.11.3",
+  version: "2026.07.10.1",
   globalArguments: GlobalArgsSchema,
   resources: {
     snapshot: {
