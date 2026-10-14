@@ -1,7 +1,8 @@
 manifestVersion: 1
 name: "@mgreten/frigate-timelapse"
-version: "2026.07.10.1"
+version: "2026.10.14.1"
 description: "Construction site timelapse capture and compilation via the Frigate NVR API. Captures periodic snapshots from any Frigate camera on a remote host via SSH, organises them into named phases, and compiles per-day and full-phase H.264 videos using ffmpeg inside the Frigate container."
+license: MIT
 repository: "https://github.com/meagerfindings/frigate-timelapse"
 models:
   - frigate_timelapse.ts
